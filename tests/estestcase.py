@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+
 import os
 import logging
 
@@ -30,12 +30,12 @@ class ESTestCase(unittest.TestCase):
             self.log.close()
 
     def assertResultContains(self, result, expected):
-        for (key, value) in expected.items():
+        for (key, value) in list(expected.items()):
             found = False
             try:
                 found = value == result[key]
             except KeyError:
-                if result.has_key('meta'):
+                if 'meta' in result:
                     found = value == result['meta'][key]
             self.assertEquals(True, found)
 
@@ -48,11 +48,10 @@ class ESTestCase(unittest.TestCase):
         """
         try:
             callableObj(*args, **kwargs)
-        except excClass, e:
+        except excClass as e:
             return e
         else:
-            raise self.failureException, \
-                "Expected exception %s not raised" % excClass
+            raise self.failureException("Expected exception %s not raised" % excClass)
 
     def get_datafile(self, filename):
         """
@@ -108,35 +107,35 @@ def setUp():
 
     """
     mapping = {
-        u'parsedtext': {
+        'parsedtext': {
             'boost': 1.0,
             'index': 'analyzed',
             'store': 'yes',
-            'type': u'string',
+            'type': 'string',
             "term_vector": "with_positions_offsets"},
-        u'name': {
+        'name': {
             'boost': 1.0,
             'index': 'analyzed',
             'store': 'yes',
-            'type': u'string',
+            'type': 'string',
             "term_vector": "with_positions_offsets"},
-        u'title': {
+        'title': {
             'boost': 1.0,
             'index': 'analyzed',
             'store': 'yes',
-            'type': u'string',
+            'type': 'string',
             "term_vector": "with_positions_offsets"},
-        u'pos': {
+        'pos': {
             'store': 'yes',
-            'type': u'integer'},
-        u'doubles': {
+            'type': 'integer'},
+        'doubles': {
             'store': 'yes',
-            'type': u'double'},
-        u'uuid': {
+            'type': 'double'},
+        'uuid': {
             'boost': 1.0,
             'index': 'not_analyzed',
             'store': 'yes',
-            'type': u'string'}}
+            'type': 'string'}}
 
     conn = get_conn(log_curl=True)
     conn.delete_index_if_exists("test-pindex")

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+
 import unittest
 from .estestcase import ESTestCase
 from pyes.exceptions import (NotFoundException, IndexAlreadyExistsException)
@@ -11,17 +11,17 @@ class RaiseIfErrorTestCase(ESTestCase):
         self.assertRaises(
             NotFoundException,
             convert_errors.raise_if_error,
-            404, {u'_type': u'a_type', u'_id': u'1', u'_index': u'_all'})
+            404, {'_type': 'a_type', '_id': '1', '_index': '_all'})
 
     def test_nested_index_already_exists_exception(self):
         self.assertRaises(
             IndexAlreadyExistsException,
             convert_errors.raise_if_error,
-            400, {u'status': 400,
-                  u'error': (u'RemoteTransportException[[name][inet' +
-                             u'[/127.0.0.1:9300]][indices/createIndex]]; ' +
-                             u'nested: IndexAlreadyExistsException[' +
-                             u'[test-index] Already exists]; ')})
+            400, {'status': 400,
+                  'error': ('RemoteTransportException[[name][inet' +
+                             '[/127.0.0.1:9300]][indices/createIndex]]; ' +
+                             'nested: IndexAlreadyExistsException[' +
+                             '[test-index] Already exists]; ')})
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+
 
 #
 # Fake ttypes to use in http protocol to simulate thrift ones
@@ -194,7 +194,7 @@ class RestRequest(object):
         full_url = 'http://localhost:9200' + self.uri
         if len(self.parameters) > 0:
             full_url += '?'
-            for k, v in self.parameters.iteritems():
+            for k, v in self.parameters.items():
                 full_url += k + '&' + v
 
         return "curl -X%s %s -d '%s'" % (

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+
 import base64
-from urllib import quote
+from urllib.parse import quote
 import array
 import uuid
 
@@ -13,7 +13,7 @@ def make_id(value):
     :param value: a text value
     :return: a string
     """
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         value=value.encode("utf8", errors="ignore")
     from hashlib import md5
     val = uuid.UUID(bytes=md5(value).digest(), version=4)
@@ -117,7 +117,7 @@ def clean_string(text):
     """
     Remove Lucene reserved characters from query string
     """
-    if isinstance(text, unicode):
+    if isinstance(text, str):
         return text.translate(UNI_SPECIAL_CHARS).strip()
     return text.translate(None, STR_SPECIAL_CHARS).strip()
 
@@ -128,7 +128,7 @@ def keys_to_string(data):
     """
     if isinstance(data, dict):
         for key in list(data.keys()):
-            if isinstance(key, unicode):
+            if isinstance(key, str):
                 value = data[key]
                 val = keys_to_string(value)
                 del data[key]

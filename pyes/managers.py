@@ -38,7 +38,7 @@ class Indices(object):
 
         """
         status = self.status([alias])
-        return status['indices'].keys()
+        return list(status['indices'].keys())
 
     def change_aliases(self, commands):
         """
@@ -56,7 +56,7 @@ class Indices(object):
 
     def _get_alias_params(self, **kwargs):
         ret = {}
-        for name, value in kwargs.items():
+        for name, value in list(kwargs.items()):
             if name in self.alias_params and value:
                 if isinstance(value, Filter):
                     ret[name] = value.serialize()
@@ -163,7 +163,7 @@ class Indices(object):
         """
         try:
             return self.create_index(index, settings)
-        except IndexAlreadyExistsException, e:
+        except IndexAlreadyExistsException as e:
             return e.result
 
     def delete_index(self, index):
@@ -345,7 +345,7 @@ class Indices(object):
             refresh=refresh,
             flush=flush,
             )
-        for k, v in params.iteritems():
+        for k, v in params.items():
             params[k] = v and "true" or "false"
         if max_num_segments is not None:
             params['max_num_segments'] = max_num_segments
@@ -575,7 +575,7 @@ class Cluster(object):
             parameters['filter_blocks'] = filter_blocks
 
         if filter_blocks is not None:
-            if isinstance(filter_indices, basestring):
+            if isinstance(filter_indices, str):
                 parameters['filter_indices'] = filter_indices
             else:
                 parameters['filter_indices'] = ",".join(filter_indices)

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+
 
 from types import NoneType
 import datetime
 from django.db import models
 import uuid
+import collections
 
 __author__ = 'Alberto Paro'
 __all__ = ["get_values"]
@@ -33,8 +34,8 @@ def get_values(instance, go_into={}, exclude=(), extra=(), skip_none=False):
     from django.db.models.manager import Manager
     from django.db.models import Model
 
-    SIMPLE_TYPES = (int, long, str, list, dict, tuple, bool, float, bool,
-                    unicode, NoneType)
+    SIMPLE_TYPES = (int, int, str, list, dict, tuple, bool, float, bool,
+                    str, NoneType)
 
     if not isinstance(instance, Model):
         raise TypeError("Argument is not a Model")
@@ -58,7 +59,7 @@ def get_values(instance, go_into={}, exclude=(), extra=(), skip_none=False):
     for field in extra:
         property = getattr(instance, field)
 
-        if callable(property):
+        if isinstance(property, collections.Callable):
             property = property()
 
         if skip_none and property is None:
@@ -83,7 +84,7 @@ def get_values(instance, go_into={}, exclude=(), extra=(), skip_none=False):
             # if it's an instance of manager (this means a more complicated
             # relationship), ignore it
             continue
-        elif go_into.has_key(field):
+        elif field in go_into:
             # if it's in the go_into dict, make a recursive call for that field
             try:
                 field_go_into = go_into[field].get('go_into', {})
@@ -114,7 +115,7 @@ def get_values(instance, go_into={}, exclude=(), extra=(), skip_none=False):
                 value[field] = property
             else:
                 # else, we just put the value #
-                if callable(property):
+                if isinstance(property, collections.Callable):
                     property = property()
 
                 if isinstance(property, SIMPLE_TYPES):

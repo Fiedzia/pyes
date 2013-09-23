@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+
 from .estestcase import ESTestCase
 from pyes.models import _is_bulk_item_ok, _raise_exception_if_bulk_item_failed
 from pyes.query import TermQuery
@@ -8,27 +8,27 @@ from pyes.exceptions import BulkOperationException
 class BulkTestCase(ESTestCase):
     def setUp(self):
         super(BulkTestCase, self).setUp()
-        mapping = {u'parsedtext': {'boost': 1.0,
+        mapping = {'parsedtext': {'boost': 1.0,
                                    'index': 'analyzed',
                                    'store': 'yes',
-                                   'type': u'string',
+                                   'type': 'string',
                                    "term_vector": "with_positions_offsets"},
-                   u'name': {'boost': 1.0,
+                   'name': {'boost': 1.0,
                              'index': 'analyzed',
                              'store': 'yes',
-                             'type': u'string',
+                             'type': 'string',
                              "term_vector": "with_positions_offsets"},
-                   u'title': {'boost': 1.0,
+                   'title': {'boost': 1.0,
                               'index': 'analyzed',
                               'store': 'yes',
-                              'type': u'string',
+                              'type': 'string',
                               "term_vector": "with_positions_offsets"},
-                   u'pos': {'store': 'yes',
-                            'type': u'integer'},
-                   u'uuid': {'boost': 1.0,
+                   'pos': {'store': 'yes',
+                            'type': 'integer'},
+                   'uuid': {'boost': 1.0,
                              'index': 'not_analyzed',
                              'store': 'yes',
-                             'type': u'string'}}
+                             'type': 'string'}}
         self.conn.create_index(self.index_name)
         self.conn.put_mapping(self.document_type, {'properties': mapping}, self.index_name)
 

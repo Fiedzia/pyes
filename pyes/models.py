@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
-from __future__ import with_statement
+
+
 
 import copy
 import threading
@@ -26,7 +26,7 @@ class DotDict(dict):
     __delattr__ = dict.__delitem__
 
     def __deepcopy__(self, memo):
-        return DotDict([(copy.deepcopy(k, memo), copy.deepcopy(v, memo)) for k, v in self.items()])
+        return DotDict([(copy.deepcopy(k, memo), copy.deepcopy(v, memo)) for k, v in list(self.items())])
 
 
 class ElasticSearchModel(DotDict):
@@ -38,17 +38,16 @@ class ElasticSearchModel(DotDict):
             item = args[1]
             self.update(item.pop("_source", DotDict()))
             self.update(item.pop("fields", {}))
-            self._meta = DotDict([(k.lstrip("_"), v) for k, v in item.items()])
+            self._meta = DotDict([(k.lstrip("_"), v) for k, v in list(item.items())])
             self._meta.parent = self.pop("_parent", None)
             self._meta.connection = args[0]
         else:
             self.update(dict(*args, **kwargs))
 
     def __setattr__(self, key, value):
-        if not self.__dict__.has_key(
-            '_ElasticSearchModel__initialised'):  # this test allows attributes to be set in the __init__ method
+        if '_ElasticSearchModel__initialised' not in self.__dict__:  # this test allows attributes to be set in the __init__ method
             return dict.__setattr__(self, key, value)
-        elif self.__dict__.has_key(key):       # any normal attributes are handled normally
+        elif key in self.__dict__:       # any normal attributes are handled normally
             dict.__setattr__(self, key, value)
         else:
             self.__setitem__(key, value)
@@ -182,7 +181,7 @@ class ListBulker(BaseBulker):
         with self.bulk_lock:
             self.bulk_data = []
 
-    def __nonzero__(self):
+    def __bool__(self):
         # This is needed for __del__ in ES to correctly detect if there is
         # unsaved bulk data left over.
         return not not self.bulk_data
@@ -247,7 +246,7 @@ class SortedDict(dict):
             data = list(data)
         super(SortedDict, self).__init__(data)
         if isinstance(data, dict):
-            self.keyOrder = data.keys()
+            self.keyOrder = list(data.keys())
         else:
             self.keyOrder = []
             seen = set()
@@ -258,7 +257,7 @@ class SortedDict(dict):
 
     def __deepcopy__(self, memo):
         return self.__class__([(key, copy.deepcopy(value, memo))
-                               for key, value in self.iteritems()])
+                               for key, value in self.items()])
 
     def __setitem__(self, key, value):
         if key not in self:
@@ -287,7 +286,7 @@ class SortedDict(dict):
         return result
 
     def items(self):
-        return zip(self.keyOrder, self.values())
+        return list(zip(self.keyOrder, list(self.values())))
 
     def iteritems(self):
         for key in self.keyOrder:
@@ -300,14 +299,14 @@ class SortedDict(dict):
         return iter(self.keyOrder)
 
     def values(self):
-        return map(self.__getitem__, self.keyOrder)
+        return list(map(self.__getitem__, self.keyOrder))
 
     def itervalues(self):
         for key in self.keyOrder:
             yield self[key]
 
     def update(self, dict_):
-        for k, v in dict_.iteritems():
+        for k, v in dict_.items():
             self[k] = v
 
     def setdefault(self, key, default):
@@ -341,7 +340,7 @@ class SortedDict(dict):
         Replaces the normal dict.__repr__ with a version that returns the keys
         in their sorted order.
         """
-        return '{%s}' % ', '.join(['%r: %r' % (k, v) for k, v in self.items()])
+        return '{%s}' % ', '.join(['%r: %r' % (k, v) for k, v in list(self.items())])
 
     def clear(self):
         super(SortedDict, self).clear()

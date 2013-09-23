@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import pyes
 
@@ -16,11 +16,11 @@ es.refresh([index])
 query = pyes.StringQuery("*")
 search = pyes.query.Search(query=query, start=0, size=10, sort=[{"number":"asc"}], fields=["number"])
 results = es.search(search, indices=[index], doc_types=[doc_type])
-print [i for i in results]
+print([i for i in results])
 
 query2 = pyes.StringQuery("*")
 search2 = pyes.query.Search(query=query2, start=20, size=20, sort=[{"number":"asc"}], fields=["number"])
 results2 = es.search(search2, indices=[index], doc_types=[doc_type])
-print [i for i in results2]
+print([i for i in results2])
 
 es.delete_index_if_exists(index)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+
 import io
 import unittest
 from .estestcase import ESTestCase
@@ -11,21 +11,21 @@ from pyes.utils import ESRangeOp
 
 class UnicodeWriter(io.StringIO):
     def write(self, ss, *args, **kwargs):
-        super(UnicodeWriter, self).write(unicode(ss), *args, **kwargs)
+        super(UnicodeWriter, self).write(str(ss), *args, **kwargs)
 
 
 class MultiSearchTestCase(ESTestCase):
     def setUp(self):
         super(MultiSearchTestCase, self).setUp()
-        mapping = {u'name': {'boost': 1.0,
+        mapping = {'name': {'boost': 1.0,
                              'index': 'analyzed',
                              'store': 'yes',
-                             'type': u'string',
+                             'type': 'string',
                              "term_vector": "with_positions_offsets"},
-                   u'title': {'boost': 1.0,
+                   'title': {'boost': 1.0,
                               'index': 'analyzed',
                               'store': 'yes',
-                              'type': u'string',
+                              'type': 'string',
                               "term_vector": "with_positions_offsets"}}
         self.conn.create_index(self.index_name)
         self.conn.put_mapping(self.document_type, {'properties': mapping}, self.index_name)

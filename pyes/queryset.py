@@ -105,7 +105,7 @@ class QuerySet(object):
         Deep copy of a QuerySet doesn't populate the cache
         """
         obj = self.__class__()
-        for k,v in self.__dict__.items():
+        for k,v in list(self.__dict__.items()):
             if k in ('_iter','_result_cache'):
                 obj.__dict__[k] = None
             else:
@@ -189,7 +189,7 @@ class QuerySet(object):
 #            if len(self._result_cache) <= pos:
 #                self._fill_cache()
 
-    def __nonzero__(self):
+    def __bool__(self):
         if self._result_cache is not None:
             len(self)
             return bool(self._result_cache.total!=0)
@@ -398,7 +398,7 @@ class QuerySet(object):
         try:
             return self.get(**lookup), False
         except self.model.DoesNotExist:
-            params = dict([(k, v) for k, v in kwargs.items() if '__' not in k])
+            params = dict([(k, v) for k, v in list(kwargs.items()) if '__' not in k])
             params.update(defaults)
             obj = self.model(**params)
             meta = obj.get_meta()
@@ -484,7 +484,7 @@ class QuerySet(object):
         flat = kwargs.pop('flat', False)
         if kwargs:
             raise TypeError('Unexpected keyword arguments to values_list: %s'
-                    % (kwargs.keys(),))
+                    % (list(kwargs.keys()),))
         if flat and len(fields) > 1:
             raise TypeError("'flat' is not valid when values_list is called with more than one field.")
         assert fields, "A least a field is required"
@@ -615,7 +615,7 @@ class QuerySet(object):
                     #TODO: dict parser
                 else:
                     raise TypeError('Only Filter objects can be passed as argument')
-        for field, value in kwargs.items():
+        for field, value in list(kwargs.items()):
             filters.append(self._build_inner_filter(field, value))
         return filters
 
@@ -649,14 +649,14 @@ class QuerySet(object):
         for arg in args:
             if isinstance(arg, Facet):
                 obj._facets.append(arg)
-            elif isinstance(arg, basestring):
+            elif isinstance(arg, str):
                 obj._facets.append(TermFacet(arg.replace("__", ".")))
             else:
                 raise NotImplementedError("invalid type")
 
 
         # Add the aggregates/facet to the query
-        for name, field in kwargs.items():
+        for name, field in list(kwargs.items()):
             obj._facets.append(TermFacet(field=field.replace("__", "."), name=name.replace("__", ".")))
         return obj
 
@@ -693,7 +693,7 @@ class QuerySet(object):
         assert self._ordering, "You need to set an ordering for reverse"
         ordering = []
         for order in self._ordering:
-            for k,v in order.items():
+            for k,v in list(order.items()):
                 if v=="asc":
                     ordering.append({k: "desc"})
                 else:

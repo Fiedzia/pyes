@@ -12,7 +12,7 @@
     :license: BSD, see LICENSE for more details.
 
 """
-from __future__ import absolute_import
+
 
 ############## py3k #########################################################
 import sys, types
@@ -24,7 +24,7 @@ except NameError:                           # pragma: no cover
     from imp import reload                  # noqa
 
 try:
-    from UserList import UserList           # noqa
+    from collections import UserList           # noqa
 except ImportError:                         # pragma: no cover
     from collections import UserList        # noqa
 
@@ -42,7 +42,7 @@ if is_py3k:                                 # pragma: no cover
         def write(self, data):
             StringIO.write(self, bytes_to_str(data))
 else:
-    from StringIO import StringIO           # noqa
+    from io import StringIO           # noqa
     BytesIO = WhateverIO = StringIO         # noqa
 
 if is_py3k:
@@ -52,16 +52,16 @@ if is_py3k:
     text_type = str
     binary_type = bytes
 else:
-    string_types = basestring,
-    integer_types = int, long
-    class_types = type, types.ClassType
-    text_type = unicode
+    string_types = str,
+    integer_types = int, int
+    class_types = type, type
+    text_type = str
     binary_type = str
 
 ############## itertools.zip_longest #######################################
 
 try:
-    from itertools import izip_longest as zip_longest
+    from itertools import zip_longest as zip_longest
 except ImportError:                         # pragma: no cover
     import itertools
 
@@ -75,7 +75,7 @@ except ImportError:                         # pragma: no cover
         iters = [itertools.chain(it, sentinel(), fillers)
                     for it in args]
         try:
-            for tup in itertools.izip(*iters):
+            for tup in zip(*iters):
                 yield tup
         except IndexError:
             pass

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+
 from .exceptions import InvalidQuery, InvalidParameterQuery, QueryError, \
     ScriptFieldsError
 from .facets import FacetFactory
@@ -21,7 +21,7 @@ class Suggest(EqualityComparableUsingAttributeDictionary):
         :param size: number of phrases
         :return: None
         """
-        num_tokens = text.count(u' ') + 1
+        num_tokens = text.count(' ') + 1
         if num_tokens > 1:
             self.add_phrase(text=text, name=name, field=field, size=size)
         else:
@@ -248,7 +248,7 @@ class Search(EqualityComparableUsingAttributeDictionary):
 
         """
         if boost is None:
-            if self.index_boost.has_key(index):
+            if index in self.index_boost:
                 del(self.index_boost[index])
         else:
             self.index_boost[index] = boost
@@ -1143,7 +1143,7 @@ class StringQuery(Query):
         filters = {}
         if self.default_field:
             filters["default_field"] = self.default_field
-            if not isinstance(self.default_field, (str, unicode)) and isinstance(self.default_field, list):
+            if not isinstance(self.default_field, str) and isinstance(self.default_field, list):
                 if not self.use_dis_max:
                     filters["use_dis_max"] = self.use_dis_max
                 if self.tie_breaker:
@@ -1166,7 +1166,7 @@ class StringQuery(Query):
         if self.phrase_slop:
             filters["phrase_slop"] = self.phrase_slop
         if self.search_fields:
-            if isinstance(self.search_fields, (str, unicode)):
+            if isinstance(self.search_fields, str):
                 filters["fields"] = [self.search_fields]
             else:
                 filters["fields"] = self.search_fields
@@ -1383,7 +1383,7 @@ class IdsQuery(Query):
         data = {}
         if self.type is not None:
             data['type'] = self.type
-        if isinstance(self.values, basestring):
+        if isinstance(self.values, str):
             data['values'] = [self.values]
         else:
             data['values'] = self.values

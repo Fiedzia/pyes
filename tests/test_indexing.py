@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+
 import unittest
 from .estestcase import ESTestCase
 
@@ -32,10 +32,10 @@ class IndexingTestCase(ESTestCase):
         """
         self.conn.collect_info()
         result = self.conn.info
-        self.assertTrue(result.has_key('server'))
-        self.assertTrue(result.has_key('aliases'))
-        self.assertTrue(result['server'].has_key('name'))
-        self.assertTrue(result['server'].has_key('version'))
+        self.assertTrue('server' in result)
+        self.assertTrue('aliases' in result)
+        self.assertTrue('name' in result['server'])
+        self.assertTrue('version' in result['server'])
 
     def testIndexingWithID(self):
         """
@@ -55,7 +55,7 @@ class IndexingTestCase(ESTestCase):
             'ok': True,
             '_index': 'test-index'})
         # should have an id of some value assigned.
-        self.assertTrue(result.has_key('_id') and result['_id'])
+        self.assertTrue('_id' in result and result['_id'])
 
     def testExplicitIndexCreate(self):
         """Creazione indice"""
@@ -102,7 +102,7 @@ class IndexingTestCase(ESTestCase):
         self.conn.create_index("another-index")
         result = self.conn.status(["another-index"])
         self.conn.delete_index("another-index")
-        self.assertTrue(result.has_key('indices'))
+        self.assertTrue('indices' in result)
         self.assertResultContains(result, {'ok': True})
 
     def testIndexFlush(self):
@@ -137,7 +137,7 @@ class IndexingTestCase(ESTestCase):
 
     def testUpdateUsingFunc(self):
         def update_list_values(current, extra):
-            for k, v in extra.iteritems():
+            for k, v in extra.items():
                 if isinstance(current.get(k), list):
                     current[k].extend(v)
                 else:
@@ -210,9 +210,9 @@ class IndexingTestCase(ESTestCase):
         sleep(0.5)
         result = self.conn.morelikethis(self.index_name, self.document_type, 1, ['name'], min_term_freq=1,
             min_doc_freq=1)
-        del result[u'took']
-        self.assertResultContains(result, {u'_shards': {u'successful': 5, u'failed': 0, u'total': 5}})
-        self.assertTrue(u'hits' in result)
+        del result['took']
+        self.assertResultContains(result, {'_shards': {'successful': 5, 'failed': 0, 'total': 5}})
+        self.assertTrue('hits' in result)
         self.assertResultContains(result["hits"], {"hits": [
                 {"_score": 0.2169777, "_type": "test-type", "_id": "3", "_source": {"name": "Joe did the test"},
                  "_index": "test-index"},

@@ -3,7 +3,7 @@
 #
 # DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
 #
-from __future__ import absolute_import
+
 
 from thrift.Thrift import *
 from .ttypes import *

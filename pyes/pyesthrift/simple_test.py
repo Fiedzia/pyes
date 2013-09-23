@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-from __future__ import absolute_import
+
 import sys
 import pprint
-from urlparse import urlparse
+from urllib.parse import urlparse
 from thrift.transport import TTransport
 from thrift.transport import TSocket
 from thrift.transport import THttpClient
@@ -26,6 +26,6 @@ client = Client(protocol)
 transport.open()
 
 res = RestRequest(0, "/test-index/test-type/1", {}, {})
-print client.execute(res)
+print(client.execute(res))
 
 transport.close()

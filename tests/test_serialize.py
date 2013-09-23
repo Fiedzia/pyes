@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+
 import unittest
 from .estestcase import ESTestCase
 from pyes.query import TermQuery, RangeQuery
@@ -9,29 +9,29 @@ from datetime import datetime
 class SerializationTestCase(ESTestCase):
     def setUp(self):
         super(SerializationTestCase, self).setUp()
-        mapping = {u'parsedtext': {'boost': 1.0,
+        mapping = {'parsedtext': {'boost': 1.0,
                                    'index': 'analyzed',
                                    'store': 'yes',
-                                   'type': u'string',
+                                   'type': 'string',
                                    "term_vector": "with_positions_offsets"},
-                   u'name': {'boost': 1.0,
+                   'name': {'boost': 1.0,
                              'index': 'analyzed',
                              'store': 'yes',
-                             'type': u'string',
+                             'type': 'string',
                              "term_vector": "with_positions_offsets"},
-                   u'title': {'boost': 1.0,
+                   'title': {'boost': 1.0,
                               'index': 'analyzed',
                               'store': 'yes',
-                              'type': u'string',
+                              'type': 'string',
                               "term_vector": "with_positions_offsets"},
-                   u'pos': {'store': 'yes',
-                            'type': u'integer'},
-                   u'inserted': {'store': 'yes',
-                                 'type': u'date'},
-                   u'uuid': {'boost': 1.0,
+                   'pos': {'store': 'yes',
+                            'type': 'integer'},
+                   'inserted': {'store': 'yes',
+                                 'type': 'date'},
+                   'uuid': {'boost': 1.0,
                              'index': 'not_analyzed',
                              'store': 'yes',
-                             'type': u'string'}}
+                             'type': 'string'}}
         self.conn.create_index(self.index_name)
         self.conn.put_mapping(self.document_type, {'properties': mapping}, self.index_name)
         self.conn.index({"name": "Joe Tester", "parsedtext": "Joe Testere nice guy", "uuid": "11111", "position": 1,

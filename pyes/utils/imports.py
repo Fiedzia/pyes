@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
-from __future__ import with_statement
+
+
 
 """
     pyes.utils.imports
@@ -80,7 +80,7 @@ def symbol_by_name(name, aliases={}, imp=None, package=None,
     if imp is None:
         imp = importlib.import_module
 
-    if not isinstance(name, basestring):
+    if not isinstance(name, str):
         return name                                 # already a class
 
     name = aliases.get(name) or name
@@ -91,9 +91,9 @@ def symbol_by_name(name, aliases={}, imp=None, package=None,
     try:
         try:
             module = imp(module_name, package=package, **kwargs)
-        except ValueError, exc:
-            raise ValueError, ValueError(
-                    "Couldn't import %r: %s" % (name, exc)), sys.exc_info()[2]
+        except ValueError as exc:
+            raise ValueError(ValueError(
+                    "Couldn't import %r: %s" % (name, exc))).with_traceback(sys.exc_info()[2])
         return getattr(module, cls_name) if cls_name else module
     except (ImportError, AttributeError):
         if default is None:

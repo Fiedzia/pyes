@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+
 import unittest
 from .estestcase import ESTestCase
 from pyes.query import TermQuery
@@ -7,44 +7,44 @@ from pyes.query import TermQuery
 class MultifieldTestCase(ESTestCase):
     def setUp(self):
         super(MultifieldTestCase, self).setUp()
-        mapping = {u'parsedtext': {'boost': 1.0,
+        mapping = {'parsedtext': {'boost': 1.0,
                                    'index': 'analyzed',
                                    'store': 'yes',
-                                   'type': u'string',
+                                   'type': 'string',
                                    "term_vector": "with_positions_offsets"},
-                   u'title': {'boost': 1.0,
+                   'title': {'boost': 1.0,
                               'index': 'analyzed',
                               'store': 'yes',
-                              'type': u'string',
+                              'type': 'string',
                               "term_vector": "with_positions_offsets"},
-                   u'name': {"type": "multi_field",
+                   'name': {"type": "multi_field",
                              "fields": {
-                                 u'name': {
-                                     u'boost': 1.0,
-                                     u'index': u'analyzed',
-                                     u'omit_norms': False,
-                                     u'omit_term_freq_and_positions': False,
-                                     u'store': u'yes',
+                                 'name': {
+                                     'boost': 1.0,
+                                     'index': 'analyzed',
+                                     'omit_norms': False,
+                                     'omit_term_freq_and_positions': False,
+                                     'store': 'yes',
                                      "term_vector": "with_positions_offsets",
-                                     u'type': u'string'},
-                                 u'untouched': {u'boost': 1.0,
-                                                u'index': u'not_analyzed',
-                                                u'omit_norms': False,
-                                                u'omit_term_freq_and_positions': False,
-                                                u'store': u'yes',
+                                     'type': 'string'},
+                                 'untouched': {'boost': 1.0,
+                                                'index': 'not_analyzed',
+                                                'omit_norms': False,
+                                                'omit_term_freq_and_positions': False,
+                                                'store': 'yes',
                                                 "term_vector": "no",
-                                                u'type': u'string'}
+                                                'type': 'string'}
 
                              }
 
                    },
 
-                   u'pos': {'store': 'yes',
-                            'type': u'integer'},
-                   u'uuid': {'boost': 1.0,
+                   'pos': {'store': 'yes',
+                            'type': 'integer'},
+                   'uuid': {'boost': 1.0,
                              'index': 'not_analyzed',
                              'store': 'yes',
-                             'type': u'string'}}
+                             'type': 'string'}}
         self.conn.create_index(self.index_name)
         self.conn.put_mapping(self.document_type, {'properties': mapping}, self.index_name)
         self.conn.index({"name": "Joe Tester", "parsedtext": "Joe Testere nice guy", "uuid": "11111", "position": 1},

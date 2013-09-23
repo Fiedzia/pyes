@@ -78,13 +78,13 @@ class QuerySetTests(ESTestCase):
 
         values = list(model.objects.values("uuid", "position"))
         self.assertEqual(len(values), 3)
-        self.assertEqual([dict(t) for t in values], [{u'position': 1, u'uuid': u'11111'},
-                {u'position': 2, u'uuid': u'22222'},
-                {u'position': 3, u'uuid': u'33333'}])
+        self.assertEqual([dict(t) for t in values], [{'position': 1, 'uuid': '11111'},
+                {'position': 2, 'uuid': '22222'},
+                {'position': 3, 'uuid': '33333'}])
 
         values = list(model.objects.values_list("uuid", flat=True))
         self.assertEqual(len(values), 3)
-        self.assertEqual(values, [u'11111', u'22222',u'33333'])
+        self.assertEqual(values, ['11111', '22222','33333'])
         values = model.objects.dates("date", kind="year")
         self.assertEqual(len(values), 1)
         self.assertEqual(values, [datetime(2012, 1, 1, 0, 0)])

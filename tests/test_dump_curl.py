@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+
 import unittest
 from .estestcase import ESTestCase, get_conn
-import StringIO
+import io
 
 class DumpCurlTestCase(ESTestCase):
     def setUp(self):
@@ -12,7 +12,7 @@ class DumpCurlTestCase(ESTestCase):
         """Test errors thrown when creating or deleting indices.
 
         """
-        dump = StringIO.StringIO()
+        dump = io.StringIO()
         conn = get_conn(dump_curl=dump)
         result = conn.index(dict(title="Hi"), self.index_name, self.document_type)
         self.assertTrue('ok' in result)
